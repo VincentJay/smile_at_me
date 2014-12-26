@@ -1,9 +1,10 @@
-source 'http://rubygems.org'
+source 'http://ruby.taobao.org'
 ruby '2.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
-gem 'bootstrap-sass', '2.3.2.0'
+#gem 'bootstrap-sass', '2.3.2.0'
+gem 'bootstrap-sass', '3.2.0.0'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'bcrypt', '~> 3.1.7'
 gem 'faker', '1.1.2'
@@ -23,8 +24,8 @@ group :test do
 end
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '4.0.3'
-
+#gem 'sass-rails', '4.0.3'
+gem 'sass-rails', '5.0.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '2.1.1'
 
@@ -35,7 +36,11 @@ gem 'coffee-rails', '4.0.1'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails', '2.2.1'
+#gem 'jquery-rails', '2.2.1'
+gem 'jquery-rails', '3.1.2'
+#gem 'actionpack', '4.0.0'
+gem 'railties', '4.0.0'
+gem 'activesupport', '4.0.0'
 
 gem 'rake'
 

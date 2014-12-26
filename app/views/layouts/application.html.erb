@@ -7,27 +7,30 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
+
   <link rel="stylesheet" type="text/css" href="assets/normalize.css" />
-  <link rel="stylesheet" type="text/css" href="assets/demo.css" />
   <link rel="stylesheet" type="text/css" href="assets/component.css" />
 
-		<!--
-		<link rel="stylesheet" href="http://dreamsky.github.io/main/blog/common/init.css">
-		-->
-		<style>
+
+  <link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css"> 
+  <link rel="stylesheet" href="assets/bootstrap-image-gallery.min.css">
+
+  
+	<style>
 		body {
 			background: #444;
-		}
+		     }
 		.codrops-demos a.current-demo {
 			color: #999;
-		}
+		     }
 		.codrops-header h1 {
 			margin-top: 50px;
 			font-family: 'Microsoft Yahei';
 			color: #fff;
 		}
-		</style>
-		<script src="assets/modernizr.custom.js"></script>
+	</style>
+
+		
 
 
 </head>
@@ -40,23 +43,62 @@
 	<%end%>
   <%= yield %>
   </div>
+
   <div class="footer-banner" style="width:728px; margin:160px auto 100px"></div>
-		<script src="assets/masonry.pkgd.min.js"></script>
-		<script src="assets/imagesloaded.pkgd.min.js"></script>
-		<script src="assets/classie.js"></script>
-		<script src="assets/colorfinder-1.1.js"></script>
-		<script src="assets/gridScrollFx.js"></script>
-		<script>
-			new GridScrollFx( document.getElementById( 'grid' ), {
-				viewportFactor : 0.4
-			} );
-		</script>
-		<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
-		<!--
-		<script src="http://dreamsky.github.io/main/blog/common/jquery.min.js"></script>
-		
-		<script src="http://dreamsky.github.io/main/blog/common/init.js"></script>
-		-->
+  <!--	
+  <script src="assets/masonry.pkgd.js"></script>
+  <script src="assets/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/modernizr.custom.js"></script>
+  <script src="assets/classie.js"></script>
+   -->
+
+  <script src="assets/colorfinder-1.1.js"></script>
+  <script src="assets/gridScrollFx.js"></script>
+  
+  <script>
+		new GridScrollFx( document.getElementById( 'grid' ), {
+			viewportFactor : 0.4
+		} );
+  </script>		
+
+  <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+  <script src="assets/bootstrap-image-gallery.min.js"></script>
+
+
+		<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+  <div id="blueimp-gallery" class="blueimp-gallery">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body next"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left prev">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button type="button" class="btn btn-primary next">
+                        Next
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

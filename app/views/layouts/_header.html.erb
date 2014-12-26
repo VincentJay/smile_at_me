@@ -5,7 +5,7 @@
       <nav>
         <% if signed_in? %>
         <a href="/" id="logo"><img src="assets/Inbox.png"></a>
-        <ul class="nav pull-right">          
+        <ul class="nav navbar-nav pull-right">          
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 Me <b class="caret"></b>
@@ -20,8 +20,8 @@
             </li>
         </ul>
         <% else %>
-        <%= link_to "Smile At Me", root_path, id: "logo" %>
-         <ul class="nav pull-right"> 
+        <%= link_to "Smile @ Me", root_path, id: "logo" %>
+         <ul class="nav navbar-nav pull-right"> 
          <li><%= link_to "Sign in", signin_path %></li>
          </ul>
          <% end %>        
