@@ -11,7 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141220083132) do
+ActiveRecord::Schema.define(version: 20141229090045) do
+
+  create_table "relationships", force: true do |t|
+    t.integer  "favorer_id"
+    t.integer  "favored_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "relationships", ["favored_id"], name: "index_relationships_on_favored_id"
+  add_index "relationships", ["favorer_id", "favored_id"], name: "index_relationships_on_favorer_id_and_favored_id", unique: true
+  add_index "relationships", ["favorer_id"], name: "index_relationships_on_favorer_id"
+
+  create_table "smiles", force: true do |t|
+    t.string   "image"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "smiles", ["user_id", "created_at"], name: "index_smiles_on_user_id_and_created_at"
 
   create_table "users", force: true do |t|
     t.string   "name"

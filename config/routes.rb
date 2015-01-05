@@ -1,6 +1,18 @@
 SmileAtMe::Application.routes.draw do
-  resources :users
+  resources :users do
+  	member do
+  		get :favored
+  	end
+  end
+
+
   resources :sessions, only: [:new, :create, :destroy]
+  resources :smiles, only: [ :create, :destroy ] do
+  	collection do
+  		get :favorers
+  	end
+  end
+  resources :relationships, only: [:create, :destroy]
 
   root to: "static_pages#home"
   match '/signup', to:'users#new', via:'get'

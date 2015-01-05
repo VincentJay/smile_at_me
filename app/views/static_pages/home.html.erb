@@ -1,8 +1,34 @@
+<div class="addSmile">
+  <img id="camera" src="assets/camera.png" type="button" data-toggle="modal" data-target="#postsmile" >
+</div>
+
+
 <div id="links">
 
   <section class="grid-wrap">
 				<ul class="grid swipe-rotate" id="grid">
-					<li><a href="assets/1.jpg" title="1" data-gallery><img src="assets/1.jpg" alt="img01"><h3><img src="assets/Inbox.png"></h3></a></li>
+					
+					<% if signed_in? %>
+					  <% current_user.smiles.each do |smile| %>
+					    <% if smile.image.url != nil %>
+					      <li>
+					        <a href=<%= smile.image.url.to_s %> data-gallery><%= image_tag smile.image.url.to_s %>
+					          <h3> 
+                                  <div class="functionBar">
+
+                                    <a id="<%= smile.id %>" class="<%= current_user.favoring?(smile) ? "favor unfavor" : "favor" %>" ><span class="fa fa-heart "></span></a>
+                                    <span class="fa fa-send "></span>
+                                    <img src="assets/SmileAtIcon.png" class="smileAt">
+                                  </div>
+
+                              </h3>
+                            </a>
+                          </li>
+                        <% end %>
+					  <% end %>
+					<% end %>
+
+
 					<li><a href="assets/2.jpg" title="2" data-gallery><img src="assets/2.jpg" alt="img02"><h3>SQUET April 2014 issue</h3></a></li>
 					<li><a href="assets/3.jpg" title="3" data-gallery><img src="assets/3.jpg" alt="img03"><h3>MONOCLE issue 72</h3></a></li>
 					<li><a href="assets/4.jpg" title="4" data-gallery><img src="assets/4.jpg" alt="img04"><h3>TOWN Winter 2013</h3></a></li>

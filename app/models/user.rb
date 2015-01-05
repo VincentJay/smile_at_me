@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+	has_many :smiles, dependent: :destroy
+	has_many :relationships, foreign_key: "favorer_id", dependent: :destroy
+	has_many :favored_smiles, through: :relationships, source: :favored
 
 
 	before_save {self.email = email.downcase}
@@ -17,6 +20,22 @@ class User < ActiveRecord::Base
 	def User.hash(token)
 		Digest::SHA1.hexdigest(token.to_s)
 	end
+
+    def feed
+      Smile.from_smiles_favored_by(self)
+    end
+    
+    def favoring?(smile)
+	  relationships.find_by(favored_id: smile.id)
+	end
+
+	  def favor!(smile)
+	  	relationships.create!(favored_id: smile.id)
+	  end
+
+	  def unfavor!(smile)
+	  	relationships.find_by(favored_id: smile.id).destroy
+	  end
 
 
 	private

@@ -9,6 +9,7 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    @smile = @user.smiles.paginate(page: params[:page])
     redirect_to root_path
   end
   
@@ -23,7 +24,7 @@ class UsersController < ApplicationController
 	  flash[:success]="Welcome to the Sample App!"
 	  redirect_to @user
 	else
-	  render 'new'
+	  redirect_to root_path
 	end
   end
   

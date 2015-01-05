@@ -14,6 +14,7 @@ $gray-medium-light: #eaeaea;
 
 /* universal */
 
+
 html {
   overflow-y: scroll;
 }
@@ -37,6 +38,60 @@ textarea {
   }
 }
 
+/* add smile homepage*/
+.addSmile { 
+  background-color: #333;
+  margin: -10px;
+  margin-left: -13px;
+  margin-right: -13px;
+  height: 40px;
+  width: auto;
+  z-index: 500;
+ #camera { 
+  position: relative;
+  left: 50%;
+  padding-top: 5px;
+  
+  &:hover { 
+  cursor: pointer;
+  }
+ 
+ }
+}
+
+/* functionBar */
+
+.functionBar{
+
+  height: 45px;
+  width: 250px;
+  
+  .smileAt { 
+    position: relative;
+    display: inline;
+    top: -3px;
+    padding-left: 10px;
+  }
+  .fa {
+    color: #fff; 
+    padding-top: 13px;
+    padding-left: 10px;
+    font-size: 20px;
+    &:hovor { 
+      cursor: pointer;
+    }
+  }
+  .favor { 
+    span { 
+    color: #fff;
+    }
+  }
+  .unfavor { 
+    span { 
+     color: red;
+    }
+  }
+}
 
 /* typography */
 
@@ -312,3 +367,7 @@ span.picture {
 }
 
 
+#options { 
+  left: 50%;
+  margin-left: -110px;
+}
