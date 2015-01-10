@@ -1,0 +1,49 @@
+$('#uploadArea').html("<%= escape_javascript(render('qiniu_uploaders/form')) %>")
+
+$(document).ready(function(){
+
+    $('#btn_upload').click(function(){
+        var Qiniu_upload = function(f, token) {
+            var formData = new FormData();
+            formData.append('token', token);
+            formData.append('file', f);
+            $.ajax({
+            type: "POST",
+            url: "http://upload.qiniu.com",
+            data: formData,
+            //关闭jQuery自动处理Form数据，并把ContentType设置为Form-Data
+            processData: false,
+            contentType: false,
+            success: function(result,status,xhr){
+               
+               //Step2、利用document.getElement加载刚刚上传的图片
+               $('#uploadArea').html('<img id="returnUploadedImage">' + '<div id="response">' + '</div>');
+               var imgOrignal = "http://7tszeg.com1.z0.glb.clouddn.com/"+result.key ;
+               var imgWithWidth200x = "http://7tszeg.com1.z0.glb.clouddn.com/"+result.key+"?imageMogr2/thumbnail/200x";
+               document.getElementById('returnUploadedImage').src=imgWithWidth200x ;
+               
+               //Step3、对上传的图片进行微笑识别
+               
+               var api = new FacePP('b33a138e9fb715698f5836301a1c4d35', 'u9FR6VHBuQPfT1z31np2DMEvamRBvyJX');
+               api.request('detection/detect', { url: imgOrignal }, function(err, result) { 
+                   if (err) { 
+                   	return;
+                   }
+                   document.getElementById('response').innerHTML = JSON.stringify(result, null, 2);
+               });
+               
+            }
+            });
+        };
+
+       var token = $('#token').val();
+
+        if ($('#file')[0].files.length > 0 && token != "") { 	
+        	//Step1、上传照片到Qiniu
+            Qiniu_upload($('#file')[0].files[0] , token);
+        } else {
+
+        }
+    });
+
+});

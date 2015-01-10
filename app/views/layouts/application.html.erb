@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset= "UTF-8"> 
   <title><%= full_title(yield(:title)) %></title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
@@ -47,6 +48,16 @@
         });
 
     </script> 
+
+    <script>
+    //get Qiniu UploadToken
+      $(document).ready(function(){ 
+      	$('#camera').click(function(){ 
+      		$.get("uploadsmile",function(date, status){ 
+      		});
+      	});
+      });
+    </script>
   
 	<style>
 		body {
@@ -94,6 +105,9 @@
 
   <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
   <script src="assets/bootstrap-image-gallery.min.js"></script>
+
+
+  <script type="text/javascript" src="assets/facepp-sdk.min.js"></script>
 
 
 		<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
@@ -191,16 +205,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Select a smile</h4>
+        <h4 class="modal-title" id="myModalLabel">Only can upload image with smiling face</h4>
       </div>
       <div class="modal-body">
         <% if signed_in? %>
-        <div class="form-group">
-          <%= form_for (@smile) do |f| %>
-            <%= f.label :image %>
-            <%= f.file_field :image, class: 'form-control' %>
-            <%= f.submit "Upload", class: "btn btn-primary" %>
-          <% end %>
+        <div id="uploadArea">
+           
         </div>
         <% else %>
           <%= link_to "Sing in", signin_path %>

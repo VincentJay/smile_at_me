@@ -14,11 +14,14 @@ SmileAtMe::Application.routes.draw do
   end
   resources :relationships, only: [:create, :destroy]
 
+
   root to: "static_pages#home"
   match '/signup', to:'users#new', via:'get'
   
   match '/signin', to:'sessions#new', via:'get'
   match '/signout', to:'sessions#destroy', via: 'delete'
+
+  match '/uploadsmile', to: 'qiniu_uploaders#new', via: 'get'
 
 
   # The priority is based upon order of creation: first created -> highest priority.
