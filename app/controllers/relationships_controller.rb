@@ -1,6 +1,7 @@
 class RelationshipsController < ApplicationController
   before_action :signed_in_user
   
+  
   def create
     @smile = Smile.find_by_id(params[:favored_id])
 	current_user.favor!(@smile)
@@ -16,4 +17,5 @@ class RelationshipsController < ApplicationController
 	  format.js
 	end
   end
+
 end

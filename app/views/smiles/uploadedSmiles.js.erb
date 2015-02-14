@@ -1,0 +1,59 @@
+//本文件由 smiles/index 动作发送给客户端 可以使用的变量包括： @uploadedSmiles, @receiver(消息接收者), current_user(当前用户) 等
+
+//index我上传的smile的缩略图供用户选择
+$("#uploadedSmiles").html('<% if @uploadedSmiles.any? %><%=render partial: "uploadedSmile", collection: @uploadedSmiles %><% else %><%= "No more smiles." %><% end %>');
+
+//获取消息要发送的人 smil@ sb 并修改 <h2> title
+$("#smileAtSb h4").html('<span> <b> Smil@: </b> <span><%= @receiver.name %>');
+
+
+//选定某个要发送的smile
+$(".thumbnail").unbind("click").click(function(){ 
+
+	$(".thumbnail").each(function(){
+		if ($(this).attr("class") == "thumbnail selected"){
+  		  $(this).removeClass("selected");
+  		  $(this).css({"border-color": "#ddd", "background-color": "#fff"});
+  		}
+	});
+    
+    $(this).addClass("selected");
+	$(this).css({"border-color": "#428bca", "background-color": "#428bca"});
+
+});
+
+//发送消息
+
+$(document).ready(function(){ 
+	$("#sureToSend").unbind("click").click(function(){ 
+	//获取selected smile
+	var smile_id;
+	$(".thumbnail").each(function(){
+		if ($(this).attr("class") == "thumbnail selected"){
+  		  smile_id = $(this).children().first().attr("id");
+  		  return false;
+  		}
+	});
+    if (smile_id > 0) //smile_id 不能为空也不能 = 0
+    {  $.ajax({
+	        type: "POST",
+	        url: "/messages",
+	        timeout: 32000,
+	        data: {message: {sender_id: "<%= current_user.id %>",receiver_id: "<%= @receiver.id %>", content: smile_id, read_state: "false"}},
+	        error: function(result,status,xhr){ 
+	        	console.log(result);
+	        	console.log(status);
+	        	console.log(xhr);
+	        },
+	        success: function(result, status, xhr){ 
+	        	console.log("seccess");
+	        	console.log(result);
+	        	console.log(status);
+	        	console.log(xhr);
+	        } 
+	    });
+    }
+
+	
+    });
+});

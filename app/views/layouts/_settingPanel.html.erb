@@ -1,0 +1,44 @@
+<div class="modal fade" id="settingPanel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content" id="settingBody">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" id="closePostModal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"><b>Setting</b></h4>
+      </div>
+
+      <div class="modal-body">    
+        <% if signed_in? %>
+            <div id="avatarContainer">
+              <% if current_user.avatar == nil %>
+                <img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg">
+              <%else%>
+                <img src="<%= current_user.avatar%>">  
+              <%end%>
+
+              <div id="previewPanel" class="img-rounded">
+              <div class="previewContainer">
+              <% if current_user.avatar == nil %>
+                <img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg" class="jcrop-preview">
+              <%else%>
+                <img src="<%= current_user.avatar%>/thumbnail/80x" class="jcrop-preview">  
+              <%end%>
+              </div>
+            </div>
+             
+            </div>
+
+            <div id="uploadNewPictureBtn">
+                <button type="button" class="btn btn-default" id="uploadNewPicture">Upload new picture</button>
+                <input type="file" id="avatar" >
+            </div> 
+
+            
+        <% end %>
+    </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="saveChange">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

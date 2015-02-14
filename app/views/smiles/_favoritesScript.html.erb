@@ -1,0 +1,31 @@
+<script>
+   //取消NavBar 的选定
+    $(document).ready(function(){
+  	   $('#navList li').first().removeClass('active');
+  	   $('#navList li').last().removeClass('active');
+    });
+
+	$(document).ready(function(){ 
+       var favoritedPointer = 10
+        $('#links').after('<div class="btn-group btn-group-justified"><div id="loadMoreFavoritedSmilesBtn" class="btn btn-default" type="button">Load More</div></div>');
+        $.ajax({ 
+    		type: "GET",
+    		url: "/smiles",
+    		data: {start: 0, scope: "favorited", id: <%= current_user.id %>}
+    	});
+
+
+        $("#loadMoreFavoritedSmilesBtn").unbind("click").click(function(){ 
+	  	    $("#loadMoreFavoritedBtn").html("Loading...");
+	  	    $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: favoritedPointer, scope: "favorited", id: <%= current_user.id %>},
+           			success: function(data, status){
+           				favoritedPointer = favoritedPointer + 10;
+           			}
+           		    
+                });
+	    }); 
+    });
+</script>

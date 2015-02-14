@@ -1,0 +1,2 @@
+$("#messagePanel .badge").html("<%= @unreadMessagesAll.length %>");
+$(".unreadMessages").html('<%if @unreadMessages.any? then %><%= render partial: "unreadMessage", collection: @unreadMessages %><%else%>Nothing new.<%end%>');

@@ -1,0 +1,250 @@
+<script>
+    //----------------------------- 个人主页的设定----------------------------------------------------
+
+    //---------更换头像 只在自己的主页有权限更换头像
+    $(document).on('click', '#avatarPersonal .editableAvatar', function() { 
+    	$("#settingPanel").modal('show');
+    });
+
+
+    //-----------Personal Page 半透明Header
+	 $(document).ready( function() { 
+	    //$(".blurHeader").foggy({blurRadius: 40, opacity: 0.8, cssFilterSupport: true}); 
+	    //$('.blurHeader').blurjs({
+	    //  source: '#page',
+         // radius: 7,
+        //  overlay: 'rgba(255,255,255,0.4)'
+        //  }); 
+        //$(window).on('load', function(){ 
+
+	    var vague = $('.blurHeader').Vague({
+            intensity:      30,      // Blur Intensity
+            forceSVGUrl:    false,   // Force absolute path to the SVG filter,
+           // default animation options
+            animationOptions: {
+             duration: 1000,
+              easing: 'linear' // here you can use also custom jQuery easing functions
+              }
+          });
+         vague.blur();
+
+	        $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: 0, scope: "background"},
+           			success: function(data, status){ 
+           				//console.log(data);
+                    }
+           	});
+	});
+
+
+  //-------Personal Page menu 及 Nav Bar ME 选中按键及ajax获取内容操作----------------------------
+  
+  //NavBar 
+  $(document).on('click', '#navList li', function(){ 
+  	$('#navList li').each(function(){ 
+  		$(this).removeClass('active');
+  	});
+  	$(this).addClass('active');
+  });
+  $(document).ready(function(){
+  	  $('#navList li').first().removeClass('active');
+  	  $('#navList li').last().addClass('active');
+  });
+
+/*
+
+ //-------------Personal Menu-----------
+  $(document).on('click', '#menuPersonal ul li', function(){ 
+  	$('#menuPersonal ul li').each(function(){ 
+  		$(this).removeClass('selected');
+  	});
+  	$(this).addClass('selected');
+  });
+
+*/
+
+  //-----------------------按键获取ajax内容-----------------------------------------
+  //自动加载my smiles的内容 ， 权限的不同显示的内容也不同
+
+    //第一次自动加载20个内容
+    //$(document).on('click', '#menuPersonal ul li', function(){   
+	var loadMySmiles = function(){ 
+		var pointer = 10;
+
+	    $('#links').after('<div class="btn-group btn-group-justified"><div id="loadMoreMySmilesBtn" class="btn btn-default" type="button">Load More</div></div>');
+	    $.ajax({ 
+           	type: "GET",
+           	url: "/smiles",
+           	data: {start: 0, scope: "my",id: <%= @user.id %> },
+           	success: function(data, status){ 
+           		//console.log(data);
+            }
+           		    
+        });
+
+	  	$("#loadMoreMySmilesBtn").unbind('click').click(function(){ 
+	  	   $("#loadMoreMySmilesBtn").html("Loading...");
+	  	   $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: pointer, scope: "my", id: <%= @user.id %>},
+           			success: function(data, status){
+           				pointer = pointer + 10;
+           			}
+           		    
+           	});
+	    }); 
+	};
+
+	$(document).ready(function(){ 
+		loadMySmiles();
+	});
+ 
+ /*   
+    // 点击mySmiles ，更改loadMore button的id为 #loadMoreMySmilesBtn ajax加载 mysmiles
+    $(document).on('click', '#menuPersonal .mySmiles', function(){ 
+    // 清除上次加载的内容，否则会重复显示
+       $("#grid").children().remove();
+       $('#links').next().remove();
+       $('#links').css("display", "block");
+       loadMySmiles();
+    });
+
+    //点击 favorited， ajax加载 favorited smiles
+    $(document).ready(function(){ 
+       var favoritedPointer = 10
+
+       $('#menuPersonal .favorited').unbind('click').click(function(){ 
+    	  $("#grid").children().remove();
+          $('#links').next().remove(); 
+          $('#links').css("display", "block");
+    	  $('#links').after('<div class="btn-group btn-group-justified"><div id="loadMoreFavoritedSmilesBtn" class="btn btn-default" type="button">Load More</div></div>');
+    	  $.ajax({ 
+    		type: "GET",
+    		url: "/smiles",
+    		data: {start: 0, scope: "favorited", id: <%= @user.id %>}
+    	  });
+
+
+          $("#loadMoreFavoritedSmilesBtn").unbind("click").click(function(){ 
+	  	    $("#loadMoreFavoritedBtn").html("Loading...");
+	  	    $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: favoritedPointer, scope: "favorited", id: <%= @user.id %>},
+           			success: function(data, status){
+           				favoritedPointer = favoritedPointer + 10;
+           			}
+           		    
+                });
+	        }); 
+        });
+    });
+
+    //点击Smil@ me， ajax获取收到的smiles message
+     $(document).ready(function(){ 
+
+       $('#menuPersonal .smileAtMe').unbind('click').click(function(){ 
+    	  $("#grid").children().remove();
+    	  $('#links').next().remove();
+    	  $('#links').css("display", "none");
+    	  $('#links').after('<div class="smileAtMeMessagesList"><ul class="list-group smileAtMeMessages"></ul><nav class="list-group-item personalSmileAtMePager"><ul class="pager"><li class="previous"><a>Previous</a></li><li class="next"><a>Next</a></li></ul></div>');
+    	  $.ajax({ 
+    		type: "GET",
+    		url: "/messages",
+    		data: {start: 0, receiver_id: <%= @user.id %>, scope: "received"}
+    	  });
+
+
+	      // range = allSmilesStartPointer
+           var indexAllMessagesRange = 10;
+           var allMessagesStartPointer = indexAllMessagesRange;
+           $('.personalSmileAtMePager .next').unbind('click').click(function(){ 
+           	if (allMessagesStartPointer < <%= @user.messages.length %> )
+           	{ allMessagesStartPointer = allMessagesStartPointer + indexAllMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {receiver_id: <%= @user.id %>, start: allMessagesStartPointer, scope: "received"},
+           			success: function(data, status){ 
+           				console.log(allMessagesStartPointer);
+           			}    
+           	    });
+	        }
+           });
+
+           $('.personalSmileAtMePager .previous').unbind('click').click(function(){
+           	if ( allMessagesStartPointer >= indexAllMessagesRange )
+           	{
+           	  allMessagesStartPointer = allMessagesStartPointer - indexAllMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {receiver_id: <%= @user.id %>, start: allMessagesStartPointer, scope: "received"},
+           			success: function(data, status){           				
+           				console.log(allMessagesStartPointer);
+           			}    
+           	    });
+	        }
+           }); 
+
+	   });
+
+    });
+
+
+//点击I Smil@， ajax获取发送的smiles message 并有权限删除消息
+     $(document).ready(function(){ 
+
+       $('#menuPersonal .iSmileAt').unbind('click').click(function(){ 
+    	  $("#grid").children().remove();
+    	  $('#links').next().remove();
+    	  $('#links').css("display", "none");
+    	  $('#links').after('<div class="iSmileAtMessagesList"><ul class="list-group iSmileAtMessages"></ul><nav class="list-group-item personalISmileAtPager"><ul class="pager"><li class="previous"><a>Previous</a></li><li class="next"><a>Next</a></li></ul></div>');
+    	  $.ajax({ 
+    		type: "GET",
+    		url: "/messages",
+    		data: {start: 0, sender_id: <%= @user.id %>, scope: "send"}
+    	  });
+
+
+	      // range = allSmilesStartPointer
+           var indexSendMessagesRange = 10;
+           var allSendMessagesStartPointer = indexSendMessagesRange;
+           $('.personalSmileAtMePager .next').unbind('click').click(function(){ 
+           	if (allSendMessagesStartPointer < <%= @user.messages.length %> ) //@user.messages.length 有问题！！
+           	{ allSendMessagesStartPointer = allSendMessagesStartPointer + indexSendMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {sender_id: <%= @user.id %>, start: allSendMessagesStartPointer, scope: "send"},
+           			success: function(data, status){ 
+           				console.log(allSendMessagesStartPointer);
+           			}    
+           	    });
+	        }
+           });
+
+           $('.personalSmileAtMePager .previous').unbind('click').click(function(){
+           	if ( allSendMessagesStartPointer >= indexSendMessagesRange )
+           	{
+           	  allSendMessagesStartPointer = allSendMessagesStartPointer - indexSendMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {sender_id: <%= @user.id %>, start: allSendMessagesStartPointer, scope: "send"},
+           			success: function(data, status){           				
+           				console.log(allSendMessagesStartPointer);
+           			}    
+           	    });
+	        }
+           }); 
+
+	   });
+
+    });
+*/
+
+  </script>

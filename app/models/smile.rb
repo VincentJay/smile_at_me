@@ -1,5 +1,5 @@
 class Smile < ActiveRecord::Base
-	mount_uploader :image, ImageUploader
+
 	belongs_to :user
 	has_many :relationships, foreign_key: "favored_id", dependent: :destroy
 	has_many :favorers, through: :relationships, source: :favorer 

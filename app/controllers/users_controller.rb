@@ -8,9 +8,8 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id])
-    @smile = @user.smiles.paginate(page: params[:page])
-    redirect_to root_path
+    @user = User.find_by(name: params[:id])
+    render 'show'
   end
   
   def new
@@ -21,10 +20,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 	if @user.save
 	  sign_in @user
-	  flash[:success]="Welcome to the Sample App!"
-	  redirect_to @user
+	  render 'users/signUp.js.erb'
 	else
-	  redirect_to root_path
+	  render 'users/signUpErrors.js.erb'
 	end
   end
   
@@ -34,11 +32,10 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-	if @user.update_attributes(user_params)
-	  flash[:success] = "Profile updated"
-	  redirect_to @user
-	else
-	  render 'edit'
+	if @user.update_attribute("avatar", params[:avatar])
+	  render 'users/update.json.jbuilder'
+	else 
+		@user.update_attributes(user_params)
 	end
   end
   
@@ -53,8 +50,8 @@ class UsersController < ApplicationController
 	private
     
     def user_params
-      params.require(:user).permit(:name, :email, :password,
-                                   :password_confirmation)	
+      params.permit( :name, :avatar, :gender, :email, :password,
+                                   :password_confirmation, :slug)	
     end
 	
 	

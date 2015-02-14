@@ -9,24 +9,250 @@
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
 
-  <link rel="stylesheet" type="text/css" href="assets/normalize.css" />
-  <link rel="stylesheet" type="text/css" href="assets/component.css" />
+  <%= javascript_include_tag "colorfinder-1.1", "gridScrollFx", "jquery.blueimp-gallery.min", "bootstrap-image-gallery.min", "facepp-sdk.min", "jquery.Jcrop.min", "jquery.color", "jquery.foggy.min", "blur.min", "Vague"%>
+  <%= stylesheet_link_tag "normalize", "component", "blueimp-gallery.min", "bootstrap-image-gallery.min", "jquery.Jcrop.min", "custom" %>
+  <script src="http://localhost:9292/faye/faye.js"></script>
+
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?dab080eeaf0f135b8b342bd5542e68fb";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
 
 
-  <link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css"> 
-  <link rel="stylesheet" href="assets/bootstrap-image-gallery.min.css">
+<script> 
+    //Sign Up and Login
+
+    //----------------SignUp ------------------------------------------------------
+    $(document).ready(function(){ 
+    	$("#sureToCreate").unbind("click").click(function(){ 
+    		var formData =  new FormData();
+    		formData.append('name', $("#user_name").val());
+    		formData.append('gender', $("input[type='radio']:checked").val());
+    		formData.append('email', $("#user_email").val());
+    		formData.append('password' ,$("#user_password").val());
+    		formData.append('password_confirmation', $("#user_password_confirmation").val());
+
+    		if ( $("#user_name").val() != '' && $("input[type='radio']:selected").val() != '' && $("#user_email").val() != '' && $("user_password").val() != '' &&  $("user_confirmation").val() == $("user_password").val() )
+    		{
+
+    		  $.ajax({ 
+    		  	type: "POST",
+    		  	url: "/users",
+    		  	data: formData,
+    		  	processData: false,
+                contentType: false,
+    		  	error: function(result,status,xhr){ 
+    		  		console.log(result);
+    		  	},
+    		  	success: function(result,status,xhr){ 
+    		  		$('#signUp h4').html("<b>Success!</b>");
+                    $('#signUp .modal-body').html('<span class="fa fa-check-circle"></span>');
+                    $('#signUp .fa').css({"font-size": "100px", "color": "#5cb85c", "position": "relative", "left": "50%", "margin-left": "-50px"});
+                    $('#signUp .modal-footer').html('');
+                    setTimeout(function(){$("#signUp").modal('hide')}, 1000);
+                    
+                    //$('#navBar').load('');
+                    location.reload();
+
+    		  	}
+    		  });
+    		}
+
+    		else 
+    			$("#signUpErrors").append("<p>Error.</p>");
+
+    	});
+    });
+  
+  //---------------------------------Login---------------------------------------------------
+  $(document).ready(function(){ 
+    	$("#sureToLogin").unbind("click").click(function(){ 
+    		var formData =  new FormData();
+    		formData.append('email', $("#session_email").val());
+    		formData.append('password', $("#session_password").val());
+    		if ( $("#session_email").val() != '' && $("#session_password").val() != '' )
+    		{
+
+    		  $.ajax({ 
+    		  	type: "POST",
+    		  	url: "/sessions",
+    		  	data: formData,
+    		  	processData: false,
+                contentType: false,
+    		  	error: function(result,status,xhr){ 
+    		  		console.log(result);
+    		  	},
+    		  	success: function(result,status,xhr){ 
+    		  		setTimeout(function(){$("#logIn").modal('hide')}, 1000);
+    		  		location.reload();
+    		  	}
+    		 });
+    		}
+    		else {} 
+    	});
+    });
+
+  </script>
+
+
+
+  <% if signed_in?%>
+  <script> 
+  //-----------------头像 Setting 控制-------------------------------  
+  $(document).ready(function(){ 
+  	
+  	$("#avatar").unbind('change').change(function(){ 
+
+  	$('#uploadNewPicture').click();
+
+  	if ($("#avatar")[0].files.length == 0)
+  	{
+  	  <% if current_user.avatar == nil %>
+  	    $("#avatarContainer img").attr("src", "http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg" ) ;
+  	    $("#previewPanel img").attr("src", "http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg") ;
+      <%else%>
+        $("#avatarContainer img").attr("src", "<%= current_user.avatar%>");
+        $("#previewPanel img").attr("src", "<%= current_user.avatar%>/thumbnail/80x");
+      <%end%> 
+      } 
+
+    else
+    {
+  		$.get("/uploadtoken",function(data, status, xhr){   			
+  			var formData = new FormData();
+            formData.append('token', data.uptoken);
+            formData.append('file', $("#avatar")[0].files[0]);
+
+            $("#uploadNewPicture").html("Loading...");
+
+            $.ajax({
+              type: "POST",
+              url: "http://upload.qiniu.com",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(result,status,xhr){
+              	
+              	var imgOrignal = "http://7u2ew1.com1.z0.glb.clouddn.com/"+result.hash ;
+                var imgWithWidth250x = "http://7u2ew1.com1.z0.glb.clouddn.com/"+result.hash+"?imageMogr2/thumbnail/250x";
+                $("#avatarContainer img").first().attr({src: imgWithWidth250x, id: "target"}) ;
+                $("#previewPanel img").attr("src", imgWithWidth250x) ;
+                $("#uploadNewPicture").html("Upload new picture");
+                console.log("So far so good");
+
+                //Jcrop 
+                var jcropFunction;
+                jcropFunction = function($){ 
+                	var jcrop_api,
+                	    boundx,
+                	    boundy,
+
+                	    $preview = $('#previewPanel'),
+                	    $pcnt = $('#previewPanel .previewContainer'),
+                	    $pimg = $('#previewPanel .previewContainer img'),
+
+                	    xsize = $pcnt.width(),
+                	    ysize = $pcnt.height();
+
+                	    console.log('init', [xsize, ysize]);
+                	    $('#target').Jcrop({ 
+                	    	onChange: updatePreview,
+                	    	onSelect: updatePreview,
+                	    	minSize: [100,100],
+                	    	setSelect: [0,0,200,200],
+                	    	bgColor: 'black',
+                	    	bgOpacity: .4,
+                	    	aspectRatio: 1
+                	    }, function(){  
+                	    	var bounds = this.getBounds();
+                	    	boundx = bounds[0];
+                	    	boundy = bounds[1];
+                	    	jcrop_api = this;
+                	    	$preview.appendTo(jcrop_api.ui.holder);
+
+                	    });
+
+                	$('#uploadNewPicture').unbind('click').click(function(e){ 
+                		jcrop_api.destroy();
+                		$('#avatarContainer').html('<% if current_user.avatar == nil %><img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg"><%else%><img src="<%= current_user.avatar%>">  <%end%><div id="previewPanel" class="img-rounded"><div class="previewContainer"><img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg"  class="jcrop-preview"></div></div>');
+                		console.log("jcrop destroyed");
+                		return false;
+                	});
+
+                	function updatePreview(c)
+                	{ 
+                		if (parseInt(c.w) >0)
+                			{ 
+                				var rx = xsize / c.w;
+                				var ry = ysize / c.h;
+
+                				$pimg.css({ 
+                					width: Math.round(rx * boundx) +'px',
+                					height: Math.round(ry * boundy) + 'px',
+                					marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                                    marginTop: '-' + Math.round(ry * c.y) + 'px'
+                				});
+                			}
+                	}
+
+                	$("#saveChange").unbind('click').click(function(){ 
+
+                		var r = 250 / result.w,
+                		    jcropX = jcrop_api.tellSelect().x,
+                		    jcropY = jcrop_api.tellSelect().y,
+                		    jcropWidth = jcrop_api.tellSelect().w,
+                		    orignalX = Math.round(jcropX / r),
+                		    orignalY = Math.round(jcropY / r),
+                		    orignalWidth = Math.round(jcropWidth / r),
+                		    userAvatarUrl = imgOrignal + '?imageMogr2/crop/!' + orignalWidth+'x'+orignalWidth+'a'+orignalX+'a'+orignalY;
+                		if (result.w > 300) 
+                		{ 
+                			$.ajax({ 
+                				type: "PATCH",
+                				url: "/users/"+<%= current_user.id %>,
+                				data: {id: <%= current_user.id %>, avatar: userAvatarUrl},
+                				success: function(result, status, xhr){ 
+                					console.log(result.status);
+                				}
+                			});
+                		}
+                	});
+                };
+
+                $(document).ready(jcropFunction);
+                $(document).on('page:load', jcropFunction );
+
+               }
+            });
+  		});
+  	}
+
+  	});
+
+  });
+ 
+  </script>
+ <%end%>
+
+
+
 
 
   <script>
-        //User favor/unfavor a smile 
+        //Favor and unfavor a smile 只在此处声明，每次调用ajax获取新的内容要重新调用此函数，否则新增加的内容无法获得调用函数 
         // wait for the DOM to be loaded 
-        $(document).ready(function() { 
-            // bind 'myForm' and provide a simple callback function 
-          $('a.favor').click(function(){ 
+        // bind 'myForm' and provide a simple callback function 
+   var favorUnfavor = function(){
+         $('a.favor').unbind("click").click(function(){ 
           	var favorclass = "favor"
           	if ($(this).attr("class") == favorclass)
             { 
-              $.post("relationships",
+              $.post("/relationships",
                 {
                 favored_id: $(this).attr("id")
                 },
@@ -37,26 +263,96 @@
            	{  
            		$.ajax({ 
            			type: "DELETE",
-           			url: "relationships/"+$(this).attr("id"),
+           			url: "/relationships/"+$(this).attr("id"),
            			data: {favored_id: $(this).attr("id")}
            		    
            		});
 
            	}
            });
+    }
 
-        });
 
     </script> 
 
     <script>
-    //get Qiniu UploadToken
+    //-----------Get Qiniu UploadToken------------------Add Smile----------------------------------
       $(document).ready(function(){ 
-      	$('#camera').click(function(){ 
-      		$.get("uploadsmile",function(date, status){ 
+      	$('#camera').unbind("click").click(function(){ 
+      		$.get("/uploadsmile",function(date, status){ 
       		});
       	});
       });
+    </script>
+
+
+<% if signed_in? then%>
+    <script>
+    //Smil@ 获取并在smileAtForm中列出用户上传的smiles供用户选择和上文favorUnfavor函数一样，利用ajax调用新的内容之后要重新调用本函数，否则新增加的内容无法获得事件函数 ----------------------------------------------------
+    var getUploadedSmiles = function(){ 
+
+        $('.smileAt').unbind("click").click(function(){ 
+          var receiver_id = $(this).attr("id");
+          $("#uploadedSmiles").html('');
+           $.ajax({ 
+           	type: "GET",
+           	url: "/smiles",
+           	data: { id: <%= current_user.id %>, receiver_id: receiver_id, start: 0, scope: "uploaded"},
+           	success: function(){ 
+           		$('.smileAtSbPercentage').html('12/<%= current_user.smiles.count %>');
+           	}
+           });
+
+           // range = uploadedSmilesStartPointer
+           var indexUploadedSmilesRange = 12;
+           var uploadedSmilesStartPointer = indexUploadedSmilesRange;
+           $('#smileAtSb .next').unbind('click').click(function(){
+           	if (uploadedSmilesStartPointer < <%= current_user.smiles.count %>)
+           	{ uploadedSmilesStartPointer = uploadedSmilesStartPointer + indexUploadedSmilesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {id: <%= current_user.id %>, receiver_id: receiver_id, start: uploadedSmilesStartPointer, scope: "uploaded"},
+           			success: function(data, status){ 
+           				$('.smileAtSbPercentage').html(uploadedSmilesStartPointer +'/' + <%= current_user.smiles.count %>);
+           			}    
+           	    });
+	        }
+           });
+
+           $('#smileAtSb .previous').unbind('click').click(function(){
+           	if ( uploadedSmilesStartPointer >= indexUploadedSmilesRange )
+           	{
+           	  uploadedSmilesStartPointer = uploadedSmilesStartPointer - indexUploadedSmilesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {id: <%= current_user.id %>, receiver_id: receiver_id, start: uploadedSmilesStartPointer, scope: "uploaded"},
+           			success: function(data, status){           				
+           				console.log(uploadedSmilesStartPointer);
+           				$('.smileAtSbPercentage').html(uploadedSmilesStartPointer +'/' + <%= current_user.smiles.count %>);
+           			}    
+           	    });
+	        }
+           });
+
+        });      
+  
+    };
+    </script>
+
+<% end %>
+
+
+    <script>
+    //根据浏览器宽度调整照片栅格宽度：当屏幕宽度小于750px，单列显示图片 在smiles/index 和 smiles/create 中都要调用
+    var ajustSmileFrameWidth = function(){ 
+    	var frameWidth = $(window).width();
+    	if (frameWidth <= 750)
+    	  { 
+    	  	$(".grid li").css("width", frameWidth - 40 + "px");
+    	  }
+    }
     </script>
   
 	<style>
@@ -73,158 +369,160 @@
 		}
 	</style>
 
+	<script>
+	//ajax加载home主页内容
+	$(document).ready(function(){
+      //第一次自动加载20个内容
+	  var pointer = 15;
+	  $("#camera").load( function(){
+	        $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: 0, scope: "all"},
+           			success: function(data, status){ 
+           				//console.log(data);
+                    }
+           		    
+           	});
+	  });
+
+	  $("#loadMoreBtn").unbind("click").click(function(){ 
+	  	$("#loadMoreBtn").html("Loading...");
+	  	$.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: pointer, scope: 'all'},
+           			success: function(data, status){
+           				pointer = pointer + 15;
+           			}
+           		    
+           		});
+
+	  }); 
+	})
+
+	</script>
+	
+
+<% if signed_in? then%>
+	<script>
+	//------------Faye订阅自己的频道，接收Message---------------------------------------
+	$(document).ready(function(){
+		var smileAt = new Faye.Client('http://localhost:9292/faye');
+        smileAt.subscribe("/messages/"+ <%= current_user.id %>, function (data) {
+        	$("#messageIcon").css("background", 'url("assets/messageIcon_1.png") 0 0');
+
+        });
+    }); 
+	</script>
+
+	<script>
+	//网页加载查询是否有未读消息；点击，ajax获取未读message；
+	$(document).ready(function(){
+		$.ajax({ 
+			type: "GET",
+			url: "/messages",
+			data: {receiver_id: <%= current_user.id %>, read_state: "false", render: "false" },
+	        success: function(data, status){	               	
+	               } 
+		});
+
+
+ 	    $("#messageIcon").unbind("click").click(function(){
+	      //获取前5个未读消息
+	      $.ajax({
+	               type: "GET",
+	               url: "/messages",
+	               data: {receiver_id: <%= current_user.id %>, read_state: "false", render: "true", start: 0},
+	               success: function(data, status){ 
+	               	
+	               } 
+	        });
+
+
+	      // range = unreadSmilesStartPointer
+           var indexUnreadMessagesRange = 5;
+           var unreadSmilesStartPointer = indexUnreadMessagesRange;
+           $('#messagePanelPager .next').unbind('click').click(function(){
+
+           	if (unreadSmilesStartPointer < $("#messagePanel .badge").html() )
+           	{ unreadSmilesStartPointer = unreadSmilesStartPointer + indexUnreadMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {receiver_id: <%= current_user.id %>, read_state: "false", start: unreadSmilesStartPointer, scope: "uploaded", render: "true"},
+           			success: function(data, status){ 
+           				console.log(unreadSmilesStartPointer);
+           			}    
+           	    });
+	        }
+           });
+
+           $('#messagePanelPager .previous').unbind('click').click(function(){
+
+           	if ( unreadSmilesStartPointer >= indexUnreadMessagesRange )
+           	{
+           	  unreadSmilesStartPointer = unreadSmilesStartPointer - indexUnreadMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {receiver_id: <%= current_user.id %>, read_state: "false", start: unreadSmilesStartPointer, scope: "uploaded", render: "true"},
+           			success: function(data, status){           				
+           				console.log(unreadSmilesStartPointer);
+           			}    
+           	    });
+	        }
+           }); 
+
+	   });
+	});
+	</script>
+
+<%end%>
+ 
+
+  <script>
+    $(document).ready(function(){
+		new GridScrollFx( document.getElementById( 'grid' ), {
+			viewportFactor : 0.4
+		} );
+	});
+  </script>
+
+  
 
 
 </head>
+
+
 <body>
+  
   <%= render 'layouts/header' %>
+  
   <div class="container-fluid">
+	
 	<% flash.each do |key, value|%>
 	  <div class="alert alert-<%= key %>"><%= value %>
       </div>
 	<%end%>
-  <%= yield %>
-  </div>
+	<div id="test">
+	</div>
 
-  <div class="footer-banner" style="width:728px; margin:160px auto 100px"></div>
-  <!--	
-  <script src="assets/masonry.pkgd.js"></script>
-  <script src="assets/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/modernizr.custom.js"></script>
-  <script src="assets/classie.js"></script>
-   -->
+    <%= yield %>
 
-  <script src="assets/colorfinder-1.1.js"></script>
-  <script src="assets/gridScrollFx.js"></script>
-  
-  <script>
-		new GridScrollFx( document.getElementById( 'grid' ), {
-			viewportFactor : 0.4
-		} );
-  </script>		
-
-  <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
-  <script src="assets/bootstrap-image-gallery.min.js"></script>
+    <%= render 'layouts/loginForm' %>
+    <%= render 'layouts/signUpForm' %>
+    <%= render 'layouts/uploadSmileForm' %>
+    <%= render 'layouts/imageLightBox' %>
+    <%= render 'layouts/smileAtForm' %>
+    <%= render 'layouts/messagePanelForm' %>
+    <%= render 'layouts/settingPanel'%>
 
 
-  <script type="text/javascript" src="assets/facepp-sdk.min.js"></script>
+  </div><!--End of container-->
 
 
-		<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
-  <div id="blueimp-gallery" class="blueimp-gallery" data-use-bootstrap-modal="false">
-    <!-- The container for the modal slides -->
-    <div class="slides"></div>
-    <!-- Controls for the borderless lightbox -->
-    <h3 class="title"></h3>
-    <a class="prev">‹</a>
-    <a class="next">›</a>
-    <a class="close">×</a>
-    <a class="play-pause"></a>
-    <ol class="indicator"></ol>
-    <!-- The modal dialog, which will be used to wrap the lightbox content -->
-    <div class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body next"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left prev">
-                        <i class="glyphicon glyphicon-chevron-left"></i>
-                        Previous
-                    </button>
-                    <button type="button" class="btn btn-primary next">
-                        Next
-                        <i class="glyphicon glyphicon-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<div class="modal fade login" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-      <h4 class="modal-title">Log in</h4>
-      </div>
-      <div class="modal-body">
-      <%= form_for(:session, url: sessions_path) do |f| %>
-      
-      <%= f.label :email %>
-      <%= f.text_field :email, class: 'form-control' %>
-      
-      <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control' %>
-      <br>
-      <%= f.submit "Log in", class: "btn btn-primary" %>
-      <% end %>
-      
-      </div>
-      </div>
-</div>
-</div>
-
-<div class="modal fade signup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-      
-      <div class="modal-header">
-      <h4 class="modal-title">Sign up.</h4>
-      </div>
-      <div class="modal-body">
-      <%= form_for User.new do |f| %>
-      <%= f.label :name %>
-      <%= f.text_field :name,  class: 'form-control'  %>
-
-      <%= f.label :email %>
-      <%= f.text_field :email, class: 'form-control'  %>
-
-      <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control'  %>
-
-      <%= f.label :password_confirmation, "Confirmation" %>
-      <%= f.password_field :password_confirmation, class: 'form-control'  %>
-      <br>
-      <%= f.submit "Create my account", class: "btn btn-primary" %>
-      <% end %>
-      </div>
-      </div>
- 
-    
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="postsmile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Only can upload image with smiling face</h4>
-      </div>
-      <div class="modal-body">
-        <% if signed_in? %>
-        <div id="uploadArea">
-           
-        </div>
-        <% else %>
-          <%= link_to "Sing in", signin_path %>
-        <% end %>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-</body>
+  </body>
 </html>

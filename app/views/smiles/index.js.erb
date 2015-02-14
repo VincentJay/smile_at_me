@@ -1,0 +1,18 @@
+$("#grid").append("<%= escape_javascript( render partial: "smile", collection: @smiles ) %>");
+<% if ( @smiles.length < 2 ) %>
+  $("#loadMoreBtn").html("Bottom of lsit");
+  $("#loadMoreBtn").unbind('click');   
+<% else %>
+  $("#loadMoreBtn").html("Load More");
+<% end %>
+
+//添加刚刚post的图片，刷新home视图，重新排版
+new GridScrollFx( document.getElementById( 'grid' ), {
+			viewportFactor : 0.4
+		} );
+//根据浏览器大小自动调整图片宽度
+ajustSmileFrameWidth();
+//调用点赞函数为ajax获得的内容增加时间函数
+favorUnfavor();
+//为“smil@”功能添加事件函数
+getUploadedSmiles();

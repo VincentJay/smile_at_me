@@ -1,0 +1,3 @@
+<%= broadcast "/messages/"+@message.receiver_id.to_s do %>
+{text: "<%= "Hello"+ User.find(@message.receiver_id).name.to_s + @message.id.to_s %>"}
+<% end %>

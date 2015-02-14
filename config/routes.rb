@@ -7,21 +7,34 @@ SmileAtMe::Application.routes.draw do
 
 
   resources :sessions, only: [:new, :create, :destroy]
-  resources :smiles, only: [ :create, :destroy ] do
+  resources :smiles, only: [:index, :create, :destroy, :show ] do
   	collection do
   		get :favorers
   	end
   end
   resources :relationships, only: [:create, :destroy]
+  resources :messages, only: [:index, :create, :destroy]
 
 
   root to: "static_pages#home"
+
+
+  
   match '/signup', to:'users#new', via:'get'
   
   match '/signin', to:'sessions#new', via:'get'
   match '/signout', to:'sessions#destroy', via: 'delete'
 
+  match '/uploadtoken', to: 'qiniu_uploaders#uptoken', via: 'get'
+
+  match '/mysmiles', to: 'static_pages#mysmiles', via: 'get'
+
   match '/uploadsmile', to: 'qiniu_uploaders#new', via: 'get'
+  match '/deletesmile', to: 'qiniu_uploaders#delete', via: 'delete'
+
+  match '/favorites', to: 'smiles#favorites', via: 'get'
+
+  get ':id', :to => "users#show"
 
 
   # The priority is based upon order of creation: first created -> highest priority.

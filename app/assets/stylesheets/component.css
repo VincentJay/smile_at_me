@@ -13,7 +13,7 @@
 }
 
 .js .grid {
-	background: url(../img/loading.gif) no-repeat 50% 100px;
+	background: url(./loading-large.gif) no-repeat 50% 100px;
 }
 
 .js .grid.loaded {
@@ -23,14 +23,18 @@
 .grid li {
 	display: inline-block;
 	overflow: hidden;
-	width: 305px;
+	width: 300px;
+	/*305px*/
 	text-align: left;
 	vertical-align: top;
+	margin: 7px;
+	/*margin 0px*/
 }
 
 .js .grid li {
 	display: none;
 	float: left;
+
 }
 
 .js .grid.loaded li {
@@ -69,7 +73,8 @@
 .grid li > a {
 	position: relative;
 	overflow: hidden;
-	margin: 7px;
+	margin: 0px;
+	/*7px*/
 }
 
 /* Curtain element */
@@ -134,10 +139,10 @@
 	background: #2E3444;
 	color: #D3EEE2;
 	text-align: right;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	font-weight: 800;
-	font-size: 1em;
+	/*text-transform: uppercase;*/
+	/*letter-spacing: 1px;*/
+	/*font-weight: 800; */
+	/*font-size: 1em; */
 	-webkit-transition: -webkit-transform 0.2s, color 0.2s;
 	transition: transform 0.2s, color 0.2s;
 }

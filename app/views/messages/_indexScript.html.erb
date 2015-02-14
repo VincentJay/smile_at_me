@@ -1,0 +1,48 @@
+<script>
+   //取消NavBar 的选定
+    //$(document).ready(function(){
+  	   $('#navList li').first().removeClass('active');
+  	   $('#navList li').last().removeClass('active');
+
+
+    	  $.ajax({ 
+    		type: "GET",
+    		url: "/messages",
+    		data: {start: 0, receiver_id: <%= current_user.id %>, scope: "received"}
+    	  });
+
+
+	      // range = allSmilesStartPointer
+           var indexAllMessagesRange = 10;
+           var allMessagesStartPointer = indexAllMessagesRange;
+           $('.messagesPager .next').unbind('click').click(function(){ 
+           	if (allMessagesStartPointer < <%= current_user.messages.length %> )
+           	{ allMessagesStartPointer = allMessagesStartPointer + indexAllMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {receiver_id: <%= current_user.id %>, start: allMessagesStartPointer, scope: "received"},
+           			success: function(data, status){ 
+           				console.log(allMessagesStartPointer);
+           			}    
+           	    });
+	        }
+           });
+
+           $('.messagesPager .previous').unbind('click').click(function(){
+           	if ( allMessagesStartPointer >= indexAllMessagesRange )
+           	{
+           	  allMessagesStartPointer = allMessagesStartPointer - indexAllMessagesRange;
+	          $.ajax({ 
+           			type: "GET",
+           			url: "/messages",
+           			data: {receiver_id: <%= current_user.id %>, start: allMessagesStartPointer, scope: "received"},
+           			success: function(data, status){           				
+           				console.log(allMessagesStartPointer);
+           			}    
+           	    });
+	        }
+           }); 	  
+
+   // });
+</script>

@@ -1,35 +1,138 @@
+//$('#postsmile .modal-footer').css("display", "none");
+$('#sureToPost').css("visibility", "hidden");
+$('#postsmile .modal-body').css("height", '300px');
 $('#uploadArea').html("<%= escape_javascript(render('qiniu_uploaders/form')) %>")
 
 $(document).ready(function(){
+    //设置post smile 状态标志位
+    var postState = 'failure';
 
-    $('#btn_upload').click(function(){
-        var Qiniu_upload = function(f, token) {
+     //如果file有变化并且内容不为空则自动触发#btn_upload click
+	$('#file').unbind('change').change(function(){ 
+		if ($('#file')[0].files.length > 0)
+		{ 
+			$('#btn_upload').click();
+		}
+	});
+	
+    
+    //上传图片到七牛，并侦测笑脸 使用 jQuery 的 one() 函数确保事件函数只执行一次
+    $('#btn_upload').unbind("click").click(function(){
+        var Qiniu_upload = function(f, token, key) {
             var formData = new FormData();
             formData.append('token', token);
             formData.append('file', f);
+            formData.append('key', key)
+            //显示“正在上传”的等待信息
+            $('#uploadArea').html('<div id="returnUploadedImageContainer"><img id="returnUploadedImage" src="/assets/loading.gif"></div>' + '<div id="response">' + '</div>');
+            document.getElementById('response').innerHTML = "Uploading...";
+                 
             $.ajax({
-            type: "POST",
-            url: "http://upload.qiniu.com",
-            data: formData,
-            //关闭jQuery自动处理Form数据，并把ContentType设置为Form-Data
-            processData: false,
-            contentType: false,
+              type: "POST",
+              url: "http://upload.qiniu.com",
+              data: formData,
+              //关闭jQuery自动处理Form数据，并把ContentType设置为Form-Data
+              processData: false,
+              contentType: false,
+            error: function(result, status, xhr){ 
+            	$('#response').html('Something goes wrong when uploading photo, please try again.');
+             },
             success: function(result,status,xhr){
                
-               //Step2、利用document.getElement加载刚刚上传的图片
-               $('#uploadArea').html('<img id="returnUploadedImage">' + '<div id="response">' + '</div>');
+               //Step2、利用document.getElement加载并显示刚刚上传的图片
+               //$('#uploadArea').html('<img id="returnUploadedImage">' + '<div id="response">' + '</div>');
+               var smileKey = result.key;
                var imgOrignal = "http://7tszeg.com1.z0.glb.clouddn.com/"+result.key ;
                var imgWithWidth200x = "http://7tszeg.com1.z0.glb.clouddn.com/"+result.key+"?imageMogr2/thumbnail/200x";
-               document.getElementById('returnUploadedImage').src=imgWithWidth200x ;
                
+               $('#returnUploadedImage').css("visibility", 'hidden');
+               $('#returnUploadedImageContainer').css("margin-top", "0px");
+               $('#postsmile .modal-body').css("height", ( (200 / result.w )* result.h + 30)+'px');
+               $('#returnUploadedImage').attr("src", imgWithWidth200x );
+               $('#returnUploadedImage').css("visibility", 'visible');
+               $('#response').html(' &nbsp;  &nbsp; <span class="fa fa-cog fa-spin"> </span>&nbsp; &nbsp; Detecting Smile...');
+
+                //在业务服务器端删除七牛资源
+                //如果在post成功之前，关闭了上传窗口，则删除刚刚上传的文件                
+                 var deleteSmile = function(bucket, smileKey){
+                     $('#postsmile').off('hidden.bs.modal').on('hidden.bs.modal', function(){
+		               if (postState == 'failure')
+		               { $.ajax({
+                   	        type: "DELETE",
+                   	        url: "/deletesmile",
+                   	        data: {bucket: bucket, smileKey: smileKey},
+                   	        success: function(result,status,xhr){ 
+                   		        console.log("Delete Smile Success!");
+                   	        }
+                          });		                           		 
+		                }
+                      });
+                    };
+                    
+
+                //Action1: Post一个笑脸 
+                var sureToPostSmile = function(){  
+                   $('#sureToPost').css("visibility", "visible");
+                   $('#sureToPost').unbind('click').click(function(){
+                   	postState = 'failure';
+                   	$.ajax({
+                   		type: "POST",
+                   		url: "/smiles",
+                   		data: {smile: {image: imgOrignal} },
+                   		success: function(result,status,xhr){
+                   			//发布成功，smiles_controller create 动作发布刚刚post的内容
+                   			//$('#postSmile').modal('toggle');
+                   			//发布成功，设置$postState = success, 否则，当modal关闭的时候如果不是已经存在的图片，删除刚刚上传的smile
+                   			postState = 'success';
+                   		}
+                   	});
+                   });
+               };
+
                //Step3、对上传的图片进行微笑识别
                
                var api = new FacePP('b33a138e9fb715698f5836301a1c4d35', 'u9FR6VHBuQPfT1z31np2DMEvamRBvyJX');
-               api.request('detection/detect', { url: imgOrignal }, function(err, result) { 
+                   
+                api.request('detection/detect', { url: imgOrignal }, function(err, result) { 
                    if (err) { 
+                   	 $('#response').html('<span class="fa fa-info"> </span> &nbsp; Something goes wrong when detecting smile, please try again.');
                    	return;
                    }
-                   document.getElementById('response').innerHTML = JSON.stringify(result, null, 2);
+
+                    //setTimeout(function(){}, 1000);
+                    //$('#postsmile .modal-footer').css("display", "block");
+                    // $('#response').html(JSON.stringify(result, null, 2));
+                    var faceObj = JSON.parse(JSON.stringify(result, null, 2));
+
+                    if (faceObj.face != '') //照片中检测到人脸
+                      { 
+                      	if (faceObj.face[0].attribute.smiling.value < 30)
+                      	{ 
+                      		$('#response').html('<span class="fa fa-info"> </span> &nbsp; Make sure upload a smiling face.');
+                      		//setTimeout(function(){$('#postsmile').modal('hide');}, 5000);
+                      	}
+                        else if (30 <= faceObj.face[0].attribute.smiling.value && faceObj.face[0].attribute.smiling.value < 70)
+                        {
+                        	$('#response').html('<span class="fa fa-meh-o"> </span> &nbsp; What a cute smilet, post it to warm the world.');
+                        	console.log(faceObj.face[0].attribute.smiling.value);
+                        	sureToPostSmile();
+                        }
+                        else if  (faceObj.face[0].attribute.smiling.value >= 70 )
+                        { 
+                        	$('#response').html('<span class="fa fa-smile-o"> </span> &nbsp; What a LOL, you looks so cute! Post it to light the world!');
+                        	sureToPostSmile();
+                        } 
+                      }
+                    else
+                      { 
+                      	$('#response').html('<span class="fa fa-frown-o"> </span> &nbsp; It seems no face in this photo, please try again.');
+                      	//setTimeout(function(){$('#postsmile').modal('hide');}, 5000);
+                      }
+
+                  //sureToPostSmile();
+                  //Action2: 关闭对话框如果没有post，会删除上传到七牛的文件         
+                  deleteSmile("smiles", smileKey);                  
+
                });
                
             }
@@ -37,10 +140,11 @@ $(document).ready(function(){
         };
 
        var token = $('#token').val();
+       var key = $('#key').val();
 
         if ($('#file')[0].files.length > 0 && token != "") { 	
-        	//Step1、上传照片到Qiniu
-            Qiniu_upload($('#file')[0].files[0] , token);
+        	//Step1、上传照片到Qiniu(检测文件类型和大小)
+            Qiniu_upload($('#file')[0].files[0] , token, key);
         } else {
 
         }

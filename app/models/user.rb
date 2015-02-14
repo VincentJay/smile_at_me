@@ -1,7 +1,18 @@
 class User < ActiveRecord::Base
+	extend FriendlyId
+	friendly_id :name, use: :slugged
+
 	has_many :smiles, dependent: :destroy
+	
 	has_many :relationships, foreign_key: "favorer_id", dependent: :destroy
 	has_many :favored_smiles, through: :relationships, source: :favored
+
+	has_many :messages, foreign_key: "sender_id", dependent: :destroy
+	has_many :receivers, through: :messages, source: :receiver
+
+	has_many :reverse_messages, class_name: "Message", foreign_key: "receiver_id"
+	has_many :senders, through: :messages, source: :sender
+
 
 
 	before_save {self.email = email.downcase}
@@ -12,6 +23,8 @@ class User < ActiveRecord::Base
 	validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
 	has_secure_password
 	validates :password, length: {minimum: 6}
+
+	validates :gender, presence: true
 
 	def User.new_remember_token
 		SecureRandom.urlsafe_base64

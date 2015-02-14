@@ -1,0 +1,7 @@
+$('.smileMessages').html('<%if @allMessages.any? then %><%= render partial: "allMessage", collection: @allMessages %><%else%>Nothing new.<%end%>');
+
+//如果屏幕尺寸小于750px， smil@ me 随着屏幕尺寸调整宽度
+if ($(window).width() <= 750 ) 
+{  var listWidth = $(window).width() -20 ;
+  $('.smileMessageBox').css({"width": listWidth + 'px', "margin-left": - listWidth/2 + 'px', });
+}

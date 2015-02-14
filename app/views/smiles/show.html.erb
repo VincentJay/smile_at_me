@@ -1,0 +1,75 @@
+<div id="smilePageHeader" >
+  <div id="avatarSmilePage">
+    <% if  @user.avatar == nil %>
+        <img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg?imageMogr2/thumbnail/80x" class="img-rounded">
+    <%else%>
+        <img src="<%= @user.avatar%>/thumbnail/200x"  class="img-rounded">
+    <%end%>  		
+  </div>
+
+  <div id="userNameSmilePage">
+  	<p><%= @user.name %></p>
+  </div>
+
+  <div id="userIntroductionSmilePage">
+  	<p><%= @user.introduction %></p>
+  </div>
+
+  <div class="blurHeader" >
+    <div class="headerImgContainer">	
+    </div>	
+  </div>
+</div>
+
+<div class="smilePageSmile">
+  <div id="links">
+    <a href="<%= @smile.image %>?imageMogr2/thumbnail/1300x " data-gallery>
+	  <img src="<%= @smile.image %>?imageMogr2/thumbnail/600x ">
+	</a>
+  </div>
+  <div class="smilePageSmileBanner">
+    <a href="/<%= @user.name %>" class="smilePageSmileBannerAvatar">
+        <% if @user.avatar == nil %>
+            <img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg?imageMogr2/thumbnail/50x" class="smilePageSmileBannerAvatar">
+        <%else%>
+                <img src="<%= @user.avatar%>/thumbnail/50x" class="smilePageSmileBannerAvatar">  
+        <%end%>
+    </a>
+    <div class="smilePageSmileBannerText">
+           <span class="smilePageSmileBannerName"><%= @user.name %></span><br>
+           <span class="smilePageSmileBannerTime"><%= distance_of_time_in_words(@smile.updated_at, 0.minutes.ago) %>&nbsp;ago</span>
+    </div>
+    <% if current_user != @user %>
+        <img src="/assets/SmileAtIcon.png" class="smileAt" type="button" data-toggle="modal" data-target="#smileAtSb" id="<%= @user.id %>">
+    <%else%>
+        <span class="fa fa-remove"></span>
+    <%end %>
+    <span class="fa fa-send "></span>
+    <% if current_user != @user %>
+        <a id="<%= @smile.id %>" class="<%=if signed_in? then current_user.favoring?(@smile) ? "favor unfavor" : "favor"  end  %>" >
+           <span class="fa fa-heart "></span>
+        </a>
+    <%end%>
+  </div>
+</div>
+
+<% if current_user == @user &&  @smile.favorers.length > 0 %>
+<div class="smileFavorers">
+  <div class="smileFavorersHeader">
+    <span>&nbsp;<%= @smile.favorers.length %> people favored</span>
+  </div>
+  <table class="table smileFavorersList">
+  	
+  </table>
+  <% if @smile.favorers.length > 5%>
+  <nav class="smileFavorersListPager">
+     <ul class="pager">
+        <li class="previous"><a><span aria-hidden="true">&larr;&nbsp;</span>Previous</a></li>
+        <li class="next"><a>Next<span aria-hidden="true">&nbsp;&rarr;</span></a></li>
+    </ul>
+  </nav>
+  <% end %>
+</div>
+<%end%>
+
+<%= render partial: 'smileShowScript', object: @user %>

@@ -1,34 +1,43 @@
+
 <div class="addSmile">
-  <img id="camera" src="assets/camera.png" type="button" data-toggle="modal" data-target="#postsmile" >
+  <img id="camera" src="assets/smileCamera.png" type="button" data-toggle="modal" data-target="#postsmile" >
 </div>
+
+
+
+
 
 
 <div id="links">
 
   <section class="grid-wrap">
 				<ul class="grid swipe-rotate" id="grid">
-					
+			    <!--
 					<% if signed_in? %>
 					  <% current_user.smiles.each do |smile| %>
-					    <% if smile.image.url != nil %>
+					    <% if smile.image != nil %>
 					      <li>
-					        <a href=<%= smile.image.url.to_s %> data-gallery><%= image_tag smile.image.url.to_s %>
+					        <a href="<%= smile.image %>"+"?imageMogr2/thumbnail/1366x" data-gallery>
+					        <img src="<%= smile.image %>"+"?imageMogr2/thumbnail/710x" />
+					        </a>
 					          <h3> 
                                   <div class="functionBar">
 
                                     <a id="<%= smile.id %>" class="<%= current_user.favoring?(smile) ? "favor unfavor" : "favor" %>" ><span class="fa fa-heart "></span></a>
                                     <span class="fa fa-send "></span>
-                                    <img src="assets/SmileAtIcon.png" class="smileAt">
+                                    <img src="assets/SmileAtIcon.png" class="smileAt" type="button" data-toggle="modal" data-target="#smileAtSb">
                                   </div>
 
                               </h3>
-                            </a>
+                            
                           </li>
                         <% end %>
 					  <% end %>
 					<% end %>
+                         
 
-
+                    
+                
 					<li><a href="assets/2.jpg" title="2" data-gallery><img src="assets/2.jpg" alt="img02"><h3>SQUET April 2014 issue</h3></a></li>
 					<li><a href="assets/3.jpg" title="3" data-gallery><img src="assets/3.jpg" alt="img03"><h3>MONOCLE issue 72</h3></a></li>
 					<li><a href="assets/4.jpg" title="4" data-gallery><img src="assets/4.jpg" alt="img04"><h3>TOWN Winter 2013</h3></a></li>
@@ -56,7 +65,14 @@
 					<li><a href="http://www.behance.net/gallery/13329103/Shitamachi-Rocket"><img src="assets/1.jpg" alt="img12"><h3>Shitamachi Rocket</h3></a></li>
 					<li><a href="http://www.behance.net/gallery/13285315/Quarterly-Musashino-winter-of-2013-issue"><img src="assets/2.jpg" alt="img13"><h3>Quarterly Musashino winter of 2013 issue</h3></a></li>
 					<li><a href="http://www.behance.net/gallery/16541811/MAINICHI-CHUUGOKUGO-May-2014"><img src="assets/3.jpg" alt="img14"><h3>MAINICHI CHUUGOKUGO April 2014</h3></a></li>
+		        -->
 				</ul>
 	</section>
 
+</div><!--links close-->
+
+<div class="btn-group btn-group-justified">
+  <div id="loadMoreBtn" class="btn btn-default" type="button">
+  Load More
+  </div>
 </div>

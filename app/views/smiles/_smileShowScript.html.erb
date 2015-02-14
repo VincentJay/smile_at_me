@@ -1,0 +1,37 @@
+<script>
+    //----------------------------- smile show page 设定----------------------------------------------------
+
+   //取消NavBar 的选定
+  	$('#navList li').first().removeClass('active');
+  	$('#navList li').last().removeClass('active');
+
+  	 //-----------Smile show Page 半透明Header
+	    var vague = $('.blurHeader').Vague({
+            intensity:      30,      // Blur Intensity
+            forceSVGUrl:    false,   // Force absolute path to the SVG filter,
+           // default animation options
+            animationOptions: {
+             duration: 1000,
+              easing: 'linear' // here you can use also custom jQuery easing functions
+              }
+          });
+         vague.blur();
+
+	        $.ajax({ 
+           			type: "GET",
+           			url: "/smiles",
+           			data: {start: 0, scope: "background"},
+           			success: function(data, status){ 
+           				//console.log(data);
+                    }
+           	});
+
+    //调整smile宽度
+    
+
+    //调用点赞函数为ajax获得的内容增加事件函数
+    favorUnfavor();
+    //为“smil@”功能添加事件函数
+    getUploadedSmiles();
+
+</script>

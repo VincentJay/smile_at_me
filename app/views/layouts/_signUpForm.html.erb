@@ -1,0 +1,48 @@
+<div class="modal fade" id="signUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"><b>Sign Up </b>to find who is smiling at you.</h4>
+      </div>
+      <div class="modal-body">
+        <div id="signUpErrors">
+        </div>
+        <div class="signUpForm">
+           <%= form_for User.new do |f| %>
+
+             <%= f.label :name, "Name:" %>
+             <%= f.text_field :name,  class: 'form-control signUpInputControl'  %><br>
+
+             <%= f.label :gender, "Gender:" %>
+             <div class="radio">
+
+             <label class="radio-inline">
+             <%= radio_button_tag(:gender,"male")%> <span class="fa fa-male"></span>
+             </label>
+             
+             <label class="radio-inline">
+             <%= radio_button_tag(:gender,"female") %><span class="fa fa-female"></span>
+             </label>
+             </div><br>
+
+
+             <%= f.label :email, "Email:" %>
+             <%= f.text_field :email, class: 'form-control signUpInputControl'  %><br>
+
+             <%= f.label :password, "Password:" %>
+             <%= f.password_field :password, class: 'form-control signUpInputControl'  %><br>
+
+             <%= f.label :password_confirmation, "Confirmation:" %>
+             <%= f.password_field :password_confirmation, class: 'form-control signUpInputControl'  %>
+       
+           <% end %>
+          
+        </div>          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="sureToCreate">Create</button>
+      </div>
+    </div>
+  </div>
+</div>

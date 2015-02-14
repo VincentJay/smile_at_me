@@ -1,0 +1,51 @@
+<% if @user != nil %>
+
+<div id="personalHeader">
+  <div id="avatarPersonal">
+    <% if  @user.avatar == nil %>
+        <img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg?imageMogr2/thumbnail/80x" class="img-rounded <%if current_user == @user then %> editableAvatar <%end%>">
+    <%else%>
+        <img src="<%= @user.avatar%>/thumbnail/200x"  class="img-rounded <%if current_user == @user then %> editableAvatar <%end%>">
+    <%end%>  		
+  </div>
+
+  <div id="userNamePersonal">
+  	<p><%= @user.name %><!-- <% if @user.gender == "male" %> <span class="fa fa-mars"></span><%elsif @user.gender == "female" %> <span class="fa fa-venus"></span> <%end%> --></p>
+  </div>
+
+  <div id="userIntroductionPersonal">
+  	<p><%= @user.introduction %></p>
+  </div>
+<!--
+  <% if current_user == @user %>
+    <div id="menuPersonal">
+  	  <ul>
+  		<li class="mySmiles selected">My Smiles</li>
+  		<li class="favorited">Favorites</li>
+  		<li class="smileAtMe">Smil@ Me</li>
+  		<li class="iSmileAt">I Smil@</li>
+  	  </ul>
+    </div>
+  <%else%>
+    <div id="menuePersonal" class="line">
+    </div>
+  <% end %>
+-->
+
+  <div class="blurHeader" >
+    <div class="headerImgContainer">	
+    </div>	
+  </div>
+
+</div>
+<% end %>
+
+<div class="personalImageGallery" id="links">
+  <section class="grid-wrap">
+    <ul class="grid swipe-rotate" id="grid">
+    
+    </ul>
+  </section>	
+</div>
+
+<%= render partial: 'showScript', object: @user %>

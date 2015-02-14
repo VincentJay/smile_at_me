@@ -4,6 +4,24 @@
 
 /* mixins, variables, etc. */
 
+
+@font-face {
+    font-family: 'open_sansregular';
+    src: url('opensans-regular-webfont.eot');
+    src: url('opensans-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('opensans-regular-webfont.woff2') format('woff2'),
+         url('opensans-regular-webfont.woff') format('woff'),
+         url('opensans-regular-webfont.ttf') format('truetype'),
+         url('opensans-regular-webfont.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+
 $gray-medium-light: #eaeaea;
 
 @mixin box_sizing {
@@ -21,7 +39,30 @@ html {
 
 body {
   padding-top: 60px;
+  /*强行覆盖body中运行时添加的奇怪的padding-right 17px*/
+  padding-right: 0px !important;
 }
+
+
+
+/*------------Set modal header background with round corner------------*/
+
+.modal-header {
+    padding:12px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #ededef;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+ }
+
+
+
+
+
 
 section {
   overflow: auto;
@@ -38,7 +79,191 @@ textarea {
   }
 }
 
-/* add smile homepage*/
+/*------------------------Navbar-----------------------*/
+
+
+
+
+#messageIcon {
+  top: 15px;
+  width: 22px;
+  height: 20px;
+  background: url('messageIcon_1.png') 0 -20px ;
+  &:hover { 
+    cursor: pointer;
+  }
+}
+.fa-user {
+  color: #fff; 
+  font-size: 20px;
+}
+
+.dropdown img { 
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+}
+
+
+/*---------------Login Form-----------------------------*/
+.logInInputControl { 
+  width: 65%;
+  margin: 5px;
+  display: inline-block;
+  left: 10px;
+}
+#session_email { 
+  position: relative;
+  left: 30px;
+}
+
+
+
+/*----------Sign up Form------------*/
+
+.signUpInputControl { 
+  position: relative;
+  left: 10px;
+  margin: 5px;
+  display: inline-block;
+  width: 50%;
+}
+
+.radio { 
+  display: inline-block;
+  margin-left: 5px;
+  position: relative;
+  left: 49px;
+}
+
+.radio input[type="radio"] { 
+  width: 13px;
+}
+
+#user_name { 
+  left: 59px;
+}
+#user_email { 
+  left: 59px;
+}
+#user_password { 
+  left: 31px;
+}
+
+
+
+/*---------------Message Panel------------------------*/
+#messagePanelPager { 
+  left: 50%;
+  width: 210px;
+  position: relative;
+  margin-left: -100px;
+}
+
+.unreadMessageSmile { 
+  float: right;
+}
+
+.readAllMessagesLink{ 
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+.readAllMessages { 
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
+  &:hover{ 
+    background-color: #efefed;
+  }
+}
+
+
+
+
+
+
+
+
+/*--------------Change Profile Photo (Setting Panel)----------- */
+
+#settingPanel {
+  .modal-dialog{ 
+    width: 480px;
+    left: 50%;
+    margin-left: -240px;
+    }
+}
+
+#avatarContainer {
+  width: 250px;
+  height: auto;
+  position: relative;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 40px;
+
+}
+
+#avatar { 
+  width: 300px;
+  position: absolute;
+  font-size: 20px;
+  left: -90px;
+  top: 0px;
+  opacity: 0;
+  cursor: pointer;      
+}
+
+#uploadNewPictureBtn { 
+  display: inline-block;
+  overflow: hidden;
+  position: absolute;
+  right: 35px;
+  top: 30px;
+}
+
+#uploadNewPicture {
+  background-color: #ededef; 
+  position: relative;
+}
+
+#settingPanel .modal-footer{ 
+  clear: both;
+}
+
+#previewPanel { 
+  display: inline-block;
+  position: absolute;
+  right: -140px;
+  top: 60px;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  z-index: 2000;
+}
+
+.previewContainer {
+   display: inline-block;
+position: absolute;
+width: 80px;
+height: 80px;
+overflow: hidden;
+z-index: 2000;
+}
+
+input.jcrop-keymgr {
+  visibility: hidden;
+}
+
+
+
+
+
+
+
+/*--------- add smile homepage ---------------*/
 .addSmile { 
   background-color: #333;
   margin: -10px;
@@ -48,9 +273,12 @@ textarea {
   width: auto;
   z-index: 500;
  #camera { 
+  height: 38px;
+  width: auto;
   position: relative;
   left: 50%;
-  padding-top: 5px;
+  margin-left: -15px;
+  padding-top: 8px;
   
   &:hover { 
   cursor: pointer;
@@ -59,19 +287,147 @@ textarea {
  }
 }
 
-/* functionBar */
+#postsmile { 
+  .modal-dialog { 
+    width: 480px;
+    left: 50%;
+    margin-left: -240px;
+  }
+  .modal-body { 
+   min-height: 300px;
+  }
+}
+
+/*----Upload Form---*/
+
+.uploadIntroduction { 
+  margin-top: 60px;
+  font-family: 'open_sansregular';
+  text-align: center;
+  font-size: 1.3em;
+  font-family: 'open_sansregular';
+}
+
+#uploadFormContainer {
+  position: relative;
+  width: 160px;
+  height: 36px;
+  overflow: hidden;
+  margin-top: 70px;
+  margin-bottom: 35px;
+  left: 50%;
+  margin-left: -80px;
+  font-size: 1.5em;
+}
+
+#file {
+  position: absolute;
+  width: 300px;
+  font-size: 22px;
+  left: -100px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#returnUploadedImageContainer { 
+ width: 200px;
+ display: inline-block;
+ float: left;
+ position: relative;
+ margin-top: 50px;
+}
+
+#returnUploadedImage {
+  display: inline-block;
+  float: right;
+}
+
+#response {
+  display: inline-block;
+  width: 220px;
+  margin-left: 20px;
+  position: relative;
+  margin-top: 50px;
+  font-size: 1.3em;
+  font-family: 'open_sansregular';
+  .fa-info { 
+    color: #d9534f;
+  }
+  .fa-frown { 
+    color: #f0ad4e;
+  }
+  .fa-meh-o { 
+    color: #5bc0de;
+  }
+  .fa-smile-o { 
+    color: #5cb85c;
+  }
+}
+
+
+
+/*----------- functionBar ------*/
 
 .functionBar{
 
   height: 45px;
-  width: 250px;
+
+  a.functionBarAvatar { 
+    position: relative;
+    float: left;
+    margin-left: -8px;
+    top: 5px;
+    display: inline-block;
+
+    img {
+      diplay: inline-block; 
+    }
+  }
   
+  .functionBarText {
+    font-family: 'open_sansregular';
+    display: inline-block;
+    float: left;
+    width: 85px;
+    height: 38px;
+    overflow: hidden;
+    
+    .functionBarName { 
+      float: left;
+      margin-left: 5px;
+      margin-top: 8px;
+      font-size: 0.4em;
+    }
+    .functionBarTime { 
+      font-size: 0.2em;
+      float: left;
+      margin-left: 4px; 
+    }
+    .timeAgo { 
+      font-size: 0.2em;
+      float: left;
+    }
+
+  }
+
   .smileAt { 
     position: relative;
     display: inline;
     top: -3px;
     padding-left: 10px;
+    &:hover{ 
+      cursor: pointer;
+    }
   }
+
+  span:hover { 
+    cursor: pointer;
+  }
+  img:hover {
+    cursor: pointer; 
+  }
+
+
   .fa {
     color: #fff; 
     padding-top: 13px;
@@ -92,6 +448,30 @@ textarea {
     }
   }
 }
+
+
+/*--------Smil@ Form-------------*/
+
+.thumbnail { 
+float: left;
+margin: 6px 4px 6px 4px;
+}
+
+#smileAtSbPager { 
+  left: 50%;
+  width: 260px;
+  position: relative;
+  margin-left: -130px;
+}
+
+.smileAtSbPercentage {
+  position: relative;
+  top: 5px;
+}
+
+
+
+
 
 /* typography */
 
@@ -120,7 +500,7 @@ p {
   line-height: 1.7em;
 }
 
-/* header */
+/*--------------- header------------ */
 
 #logo {
   float: left;
@@ -319,38 +699,6 @@ input {
   }
 }
 
-/* microposts */
-
-.microposts {
-  list-style: none;
-  padding: 0;
-  li {
-    padding: 10px 0;
-    border-top: 1px solid #e8e8e8;
-  }
-  .user {
-    margin-top: 5em;
-    padding-top: 0;
-  }
-  .content {
-    display: block;
-    margin-left: 60px;
-    img {
-      display: block;
-      padding: 5px 0;
-    }
-  }
-  .timestamp {
-    color: $gray-light;
-    display: block;
-    margin-left: 60px;
-  }
-  .gravatar {
-    float: left;
-    margin-right: 10px;
-    margin-top: 5px;
-  }
-}
 
 aside {
   textarea {
@@ -367,7 +715,401 @@ span.picture {
 }
 
 
-#options { 
-  left: 50%;
-  margin-left: -110px;
+
+/*-----------MySmiles Page--------------*/
+.subNav { 
+  background-color: #333;
+  margin: -10px;
+  margin-left: -13px;
+  margin-right: -13px;
+  height: 40px;
+  width: auto;
+  z-index: 500;
+  color: #ededef;
+  
+  ul { 
+    position: relative;
+    margin-left: -81px;
+    margin-bottom: 0px;
+    padding-left: 0px;
+    left: 50%;
+    height: 40px;
+    display: inline-block;
+  }
+
+  li { 
+    margin: 10px;
+    list-style-type: none;
+    float: left;
+    margin-bottom: 0px;
+    padding-bottom: 8px;
+    &:hover { 
+      cursor: pointer;
+      border-bottom: solid 2px #baccff;
+
+    }
+  }
 }
+
+
+
+
+
+
+
+
+/*-------Personal Page- User/show--------*/
+
+#personalHeader { 
+  height: 250px;
+  background-color: #15171b;
+  margin-top: -10px;
+  position: relative;
+  right: -20px;
+  margin-left: -40px;
+}
+
+#avatarPersonal { 
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  top: 50px;
+  position: relative;
+  left: 50%;
+  margin-left: -50px;
+  z-index: 20;
+  p { 
+    color: #fff;
+    font-size: 30px;
+    margin-top: 5px;
+    margin-left: -20px;
+  }
+  img { 
+    width: 80px;
+    height: 80px;
+    &:hover { 
+      cursor: pointer;
+    }
+  }
+}
+
+#userNamePersonal { 
+  font-family: 'open_sansregular';
+  display: inline-block;
+  width: 450px;
+  position: relative;
+  left: 50%;
+  margin-left: -270px;
+  text-align: center;
+  top: 115px;
+  color: #fff;
+  font-size: 1.6em;
+  font-weight: bolder;
+  z-index: 20;
+ /*
+  span { 
+    font-size: 0.6em;
+  }
+  .fa-mars { 
+    color: blue;
+  }
+  .fa-venus { 
+    color: pink;
+  }
+ */
+}
+
+#userIntroductionPersonal { 
+  font-family: 'open_sansregular';
+  display: inline-block;
+  width: 450px;
+  top: 140px;
+  position: relative;
+  left: 50%;
+  margin-left: -450px;
+  text-align: center;
+  z-index: 20;
+}
+
+/*
+#menuPersonal { 
+  font-family: 'open_sansregular';
+  display: inline-block;
+  position: relative;
+  top: 210px;
+  left: 50%;
+  margin-left: -440px;
+  color: #fff;
+  z-index: 20;
+  ul {  
+    height: 27px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    display: inline-block;
+    padding-left: 0px;
+    margin-bottom: 0px;
+  }
+  li { 
+    color: #CADDFF;
+    display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0px;
+    padding-bottom: 5px;
+    margin-left: 25px;
+    list-style: none;
+    float: left;
+    &:hover { 
+      cursor: pointer;
+      border-bottom: 2px solid;
+    }
+  }
+  .selected { 
+    border-bottom: 2px solid;
+    color: #fff;
+  }
+}
+*/
+
+
+
+/*----------------Personal Page Blur Header--------------------*/
+.blurHeader { 
+  height: 250px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  top: -80px;
+/*
+  -webkit-filter: blur(40px);
+  -moz-filter: blur(40px);
+  -o-filter: blur(40px);
+  -ms-filter: blur(40px);
+  filter: blur(40px);
+*/
+  .headerImgContainer { 
+     height: 250px;
+     width: 2000px;
+  }
+
+  img { 
+    display: inline-block;
+    float: left;
+  }
+}
+
+
+
+
+
+
+/*-----------前后翻页按键设置----------------*/
+.pager li {
+  &:hover { 
+    cursor: pointer;
+  } 
+}
+
+
+
+
+
+
+/*------------------------------**************------Smile Show Page--------***************----------------------------------*/
+
+#smilePageHeader { 
+  height: 250px;
+  background-color: #15171b;
+  margin-top: -10px;
+  position: relative;
+  right: -20px;
+  margin-left: -40px;
+}
+
+#avatarSmilePage { 
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  top: 50px;
+  position: relative;
+  left: 50%;
+  margin-left: -50px;
+  z-index: 20;
+  p { 
+    color: #fff;
+    font-size: 30px;
+    margin-top: 5px;
+    margin-left: -20px;
+  }
+  img { 
+    width: 80px;
+    height: 80px;
+    }
+}
+
+#userNameSmilePage { 
+  font-family: 'open_sansregular';
+  display: inline-block;
+  width: 450px;
+  position: relative;
+  left: 50%;
+  margin-left: -270px;
+  text-align: center;
+  top: 115px;
+  color: #fff;
+  font-size: 1.6em;
+  font-weight: bolder;
+  z-index: 20;
+}
+
+#userIntroductionSmilePage { 
+  font-family: 'open_sansregular';
+  display: inline-block;
+  width: 450px;
+  top: 140px;
+  position: relative;
+  left: 50%;
+  margin-left: -450px;
+  text-align: center;
+  z-index: 20;
+}
+
+
+/*----------------Smile show Blur Header--------------------*/
+.smilePageBlurHeader { 
+  height: 250px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  top: -80px;
+
+  .smilePageHeaderImgContainer { 
+     height: 250px;
+     width: 2000px;
+  }
+
+  img { 
+    display: inline-block;
+    float: left;
+  }
+}
+
+
+/*-------smile Show page image-----------*/
+.smilePageSmile{ 
+  width: 600px;
+  position: relative;
+  left: 50%;
+  margin-left: -300px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  border: 10px solid #2E3444;
+}
+
+/*------smile page smile banner------*/
+.smilePageSmileBanner {
+  background-color: #2E3444;
+
+ .smilePageSmileBannerText { 
+    display: inline-block;
+  }
+
+ .smilePageSmileBannerName {
+    position: relative;
+    top: 10px;
+    font-family: 'open_sansregular';
+    font-size: 1.2em;
+    color: #fff;
+    margin-left: 5px;
+  }
+
+  .smilePageSmileBannerTime {
+    position: relative;
+    font-family: 'open_sansregular';
+    top: 10px;
+    color: #fff;
+    margin-left: 5px;
+   }
+
+   .fa { 
+     font-size: 1.7em;
+     color: #efefed;
+     margin-right: 20px;
+     position: relative;
+     float: right;
+     top: 25px;
+     cursor: pointer;
+   }
+
+   .smileAt { 
+     margin-right: 20px;
+     float: right;
+	 position: relative;
+	 top: 25px;
+	 cursor: pointer;
+   }
+}
+
+/*--------smile Page SmileFavorers------*/
+.smileFavorers { 
+  position:relative;
+  width: 600px;
+  left: 50%;
+  margin-left: -300px;
+}
+
+.smileFavorersHeader { 
+  span{
+    font-family: 'open_sansregular';
+    color: #fff;
+    text-align: left;
+    font-size: 1em;
+  }
+}
+
+.smileFavorersListPager {
+  ul li a{ 
+    background-color: #444444;
+    border: none;
+    color: #fff;
+    &:hover { 
+    background-color: #444444;
+    border: none;
+    color: #fff;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+/*-----------------------**********---Message Index Page----**************--------------------------*/
+
+.smileMessageBox { 
+  width: 700px;
+  position: relative;
+  left: 50%;
+  margin-left: -350px;
+  margin-top: 30px;
+  background-color: #fff;
+  border: 1px solid #efefed;
+  border-top: 3px solid #2763FF;
+}
+
+.smileMessageBoxHeader { 
+  border-bottom: 2px solid #c7c7c7;
+  h2{ 
+    font-family: 'open_sansregular';
+    font-weight: bold;
+    font-size: 1.5em;
+    text-align: left;
+    margin: 30px;
+  }
+}
+

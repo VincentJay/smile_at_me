@@ -10,9 +10,14 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'faker', '1.1.2'
 gem 'will_paginate', '3.0.4'
 gem 'bootstrap-will_paginate', '0.0.9'
-gem 'carrierwave'
+#gem 'carrierwave'
 gem "font-awesome-rails"
 gem 'qiniu'
+gem 'faye'
+gem 'thin'
+gem 'redis'
+gem 'debugger'
+gem 'friendly_id'
 
 
 # Use sqlite3 as the database for Active Record
@@ -50,6 +55,8 @@ gem 'rake'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks', '1.1.1'
+
+gem 'jquery-turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '1.0.2'

@@ -1,0 +1,27 @@
+<li>
+  <a href='<%= favoritedSmile.image %>?imageMogr2/thumbnail/1366x' data-gallery> <!--大图 width: 1366px; heigh: auto-->
+    <img src='<%= favoritedSmile.image %>?imageMogr2/thumbnail/710x' /> <!--width: 750px-40px = 710px; height: auto -->
+  </a>
+    <h3> 
+      <div class="functionBar">
+         <a href="/<%= favoritedSmile.user.name %>" class="functionBarAvatar">
+         	<% if favoritedSmile.user.avatar == nil %>
+                <img src="http://7u2ew1.com1.z0.glb.clouddn.com/emptyAvatar.jpg?imageMogr2/thumbnail/35x" class="functionBarAvatar">
+            <%else%>
+                <img src="<%= favoritedSmile.user.avatar%>/thumbnail/35x" class="functionBarAvatar">  
+            <%end%>
+         </a>
+         <div class="functionBarText">
+           <span class="functionBarName"><%= favoritedSmile.user.name %></span><br>
+           <span class="functionBarTime"><%= distance_of_time_in_words(favoritedSmile.created_at, 0.minutes.ago) %> </span>
+           <span class="timeAgo">&nbsp; ago</span>
+         </div>
+         <a id="<%= favoritedSmile.id %>" class="<%=if signed_in? then current_user.favoring?(favoritedSmile) ? "favor unfavor" : "favor"  end  %>" >
+           <span class="fa fa-heart "></span>
+         </a>
+           <span class="fa fa-send "></span>
+           <img src="/assets/SmileAtIcon.png" class="smileAt" type="button" data-toggle="modal" data-target="#smileAtSb" id="<%= favoritedSmile.user.id %>">
+     </div>
+   </h3>
+  
+</li>
