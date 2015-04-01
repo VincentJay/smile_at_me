@@ -262,13 +262,53 @@ input.jcrop-keymgr {
 
 
 
+/*------------------------Home Page -------------*/
+.homePageFooter {
+  height: 100px;
+  margin-top: 80px;
+  background: #333;
+  margin-left: -20px;
+  margin-right: -15px;
+}
+
+#loadMoreBtn {
+  font-family: 'open_sansregular';
+  background: #747474;
+  color: #efefef;
+  border: 0px;
+  height: 40px;
+}
+
+#loadMoreBtnBox { 
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.fa-copyright { 
+  color: #fff;
+  position: relative;
+  left: 50%;
+  margin-left: -120px;
+  top: 45px;
+}
+
+.rightsInfo {
+  font-family: 'open_sansregular';
+  color: #fff;
+}
+
+
+
+
+
+
 
 /*--------- add smile homepage ---------------*/
 .addSmile { 
   background-color: #333;
   margin: -10px;
-  margin-left: -13px;
-  margin-right: -13px;
+  margin-left: -15px;
+  margin-right: -15px;
   height: 40px;
   width: auto;
   z-index: 500;
@@ -277,7 +317,7 @@ input.jcrop-keymgr {
   width: auto;
   position: relative;
   left: 50%;
-  margin-left: -15px;
+  margin-left: -23px;
   padding-top: 8px;
   
   &:hover { 
