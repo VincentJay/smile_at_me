@@ -1,6 +1,6 @@
-www.SmileAtMe.today
+www.Smilet.me
 -------------------
 
 ###What's this?
 
-SmileAtMe.today is an app for sharing smile faces.
+Smilet.me is an app for sharing smile faces.
